@@ -14,11 +14,11 @@ else:
     dwf = ctypes.cdll.LoadLibrary("libdwf.so")
 
 # Pulse parameters
-min_amplitude = 250e-3  # 75 mV
-max_amplitude = 400e-3  # 300 mV
-pulse_width = 700e-9
-tau_rise = 100e-9
-tau_fall = 200e-9
+min_amplitude = 250e-3  # 250 mV
+max_amplitude = 400e-3  # 400 mV
+pulse_width = 700e-9    # 700 ns
+tau_rise = 100e-9       # 100 ns
+tau_fall = 200e-9       # 200 ns
 
 # Time vector
 t = np.linspace(0, 3*pulse_width, 1000)
@@ -26,15 +26,15 @@ t = np.linspace(0, 3*pulse_width, 1000)
 # Modified Gaussian function
 def pulse(t, amplitude, tau_rise, tau_fall):
     p = (1 - np.exp(-t/tau_rise)) * np.exp(-t/tau_fall)
-    p = p - np.mean(p)
+    #p = p - np.mean(p) # not necessary
     return -amplitude * p / np.max(np.abs(p))
 
-# Function to generate random pulse amplitude
+# Function that generate random pulse amplitude
 def random_amplitude():
     return random.uniform(min_amplitude, max_amplitude)
 
 try:
-    # Enumerate devices
+    #connecting to AD3
     device_count = ctypes.c_int()
     dwf.FDwfEnum(scope.constants.enumfilterAll, ctypes.byref(device_count))
 
